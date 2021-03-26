@@ -23,11 +23,11 @@ namespace Modelo
 
         public int Procesada { get; set; }
 
-        public int Receptor { get; set; }
-
         public Guid IdSolicitud { get; set; }
 
         public string Mensaje { get; set; }
+
+        public int Direccion { get; set; }
 
     }
 }

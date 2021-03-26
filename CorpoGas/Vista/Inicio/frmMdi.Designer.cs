@@ -71,6 +71,7 @@
             this.tsmiHSmetadatos.Name = "tsmiHSmetadatos";
             this.tsmiHSmetadatos.Size = new System.Drawing.Size(180, 22);
             this.tsmiHSmetadatos.Text = "Metadatos";
+            this.tsmiHSmetadatos.Click += new System.EventHandler(this.TsmiHSmetadatos_Click);
             // 
             // tsmiHScfdi
             // 

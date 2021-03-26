@@ -41,6 +41,11 @@ namespace Modelo.Crud
                     strSql += "Fiel, ";
                     strSql += "Ciec, ";
                     strSql += "FechaConstitucion ";
+                    strSql += "FROM ";
+                    strSql += "CAT_EMPRESAS ";
+                    strSql += "WHERE ";
+                    strSql += "Status = 1 ";
+                    strSql += "ORDER BY RazonSocial";
 
                     cmdObj.CommandText = strSql;
                     SqlDataReader rdrObj = cmdObj.ExecuteReader();
@@ -53,9 +58,22 @@ namespace Modelo.Crud
                         empresa.Status = Convert.ToInt32(rdrObj[2].ToString());
                         empresa.RazonSocial = rdrObj[3].ToString();
                         empresa.Rfc = rdrObj[4].ToString();
-                        empresa.ArchivoCer = (Byte[])rdrObj[5];
-                        empresa.ArchivoKey = (Byte[])rdrObj[6];
-                        empresa.ArchivoPfx = (Byte[])rdrObj[7];
+                        if(rdrObj[5] is DBNull)
+                        {
+
+                        }
+                        else
+                        {
+                            empresa.ArchivoCer = (Byte[])rdrObj[5];
+                        }
+                        if(rdrObj[6] is DBNull)
+                        {
+
+                        }
+                        else
+                        {
+                            empresa.ArchivoKey = (Byte[])rdrObj[6];
+                        }
                         empresa.Fiel = rdrObj[8].ToString();
                         empresa.Ciec = rdrObj[9].ToString();
                         empresa.FechaConstitucion = DateTime.Parse(rdrObj[10].ToString());

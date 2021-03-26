@@ -23,8 +23,6 @@ namespace Modelo
 
         public Byte[] ArchivoKey { get; set; }
 
-        public Byte[] ArchivoPfx { get; set; }
-
         public string Fiel { get; set; }
 
         public string Ciec { get; set; }

@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,10 +42,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Crud\Archivos.cs" />
     <Compile Include="Crud\Conexion.cs" />
     <Compile Include="Crud\Empresas.cs" />
+    <Compile Include="Crud\Funciones.cs" />
     <Compile Include="Crud\Solicitudes.cs" />
+    <Compile Include="Crud\VariablesGlobales.cs" />
     <Compile Include="Empresa.cs" />
+    <Compile Include="Faltantes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Solicitud.cs" />
   </ItemGroup>

@@ -16,10 +16,29 @@ namespace Controlador
 
         #endregion
 
-        public List<Solicitud> solicitudes(string rfc, string fechaIni, string fechaFin)
+        #region "Metadatos"
+
+        public List<Solicitud> solicitudesMetadatos(string fechaIni, string fechaFin)
         {
-            return objSolicitudes.solicitudes(rfc, fechaIni, fechaFin);
+            return objSolicitudes.solicitudesMetadatos(fechaIni, fechaFin);
         }
+
+        public List<Solicitud> solicitudesMetadatos(string fechaIni, string fechaFin, int tipo)
+        {
+            return objSolicitudes.solicitudesMetadatos(fechaIni, fechaFin, tipo);
+        }
+
+        public List<Solicitud> solicitudesMetadatos(string rfc, string fechaIni, string fechaFin)
+        {
+            return objSolicitudes.solicitudesMetadatos(rfc, fechaIni, fechaFin);
+        }
+
+        public List<Solicitud> solicitudesMetadatos(string rfc, string fechaIni, string fechaFin, int tipo)
+        {
+            return objSolicitudes.solicitudesMetadatos(rfc, fechaIni, fechaFin, tipo);
+        }
+
+        #endregion
 
     }
 

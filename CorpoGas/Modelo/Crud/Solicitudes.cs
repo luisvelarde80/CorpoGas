@@ -20,8 +20,147 @@ namespace Modelo.Crud
 
         #region "Selecciona"
 
-        public List<Solicitud> solicitudes(string rfc, string fechaIni, string fechaFin)
+        public List<Solicitud> solicitudesMetadatos(string fechaIni, string fechaFin)
         {
+            fechaFin += " 23:59:59";
+
+            List<Solicitud> listaSolicitudes = new List<Solicitud>();
+            List<Empresa> empresas = new List<Empresa>();
+            Empresas objEmpresas = new Empresas();
+            empresas = objEmpresas.empresas();
+
+            foreach(var empresa in empresas)
+            {
+                cnObj = conectar.Empresa(empresa.Rfc);
+                if (cnObj != null)
+                {
+                    using (cnObj)
+                    {
+                        SqlCommand cmdObj = new SqlCommand();
+                        cmdObj.Connection = cnObj;
+                        cmdObj.CommandTimeout = 0;
+
+                        //Recibidos-Direccion=1,Emitidos-Direccion=0
+
+                        strSql = "SELECT ";
+                        strSql += "Id, ";
+                        strSql += "FechaInicial, ";
+                        strSql += "FechaFinal, ";
+                        strSql += "TipoSolicitud, ";
+                        strSql += "FechaSolicitud, ";
+                        strSql += "Convert(int,Procesada), ";
+                        strSql += "IdSolicitud, ";
+                        strSql += "Mensaje, ";
+                        strSql += "Direccion ";
+                        strSql += "FROM ";
+                        strSql += "ORI_SOLICITUDES ";
+                        strSql += "WHERE ";
+                        strSql += "FechaInicial = '" + fechaIni + "' and ";
+                        strSql += "FechaFinal = '" + fechaFin + "' and ";
+                        strSql += "TipoSolicitud = 1";
+
+                        cmdObj.CommandText = strSql;
+                        SqlDataReader rdrObj = cmdObj.ExecuteReader();
+                        while (rdrObj.Read())
+                        {
+                            Solicitud solicitud = new Solicitud();
+                            if (rdrObj[6].ToString() != "")
+                            {
+                                solicitud.Rfc = empresa.Rfc;
+                                solicitud.Id = Guid.Parse(rdrObj[0].ToString());
+                                solicitud.FechaInicial = DateTime.Parse(rdrObj[1].ToString());
+                                solicitud.FechaFinal = DateTime.Parse(rdrObj[2].ToString());
+                                solicitud.TipoSolicitud = Convert.ToInt32(rdrObj[3].ToString());
+                                solicitud.FechaSolicitud = DateTime.Parse(rdrObj[4].ToString());
+                                solicitud.Procesada = Convert.ToInt32(rdrObj[5].ToString());
+                                solicitud.IdSolicitud = Guid.Parse(rdrObj[6].ToString());
+                                solicitud.Mensaje = rdrObj[7].ToString();
+                                solicitud.Direccion = Convert.ToInt32(rdrObj[8].ToString());
+
+                                listaSolicitudes.Add(solicitud);
+                            }
+                        }
+                        rdrObj.Close();
+                    }
+                }
+            }
+
+            return listaSolicitudes;
+        }
+
+        public List<Solicitud> solicitudesMetadatos(string fechaIni, string fechaFin, int tipo)
+        {
+            fechaFin += " 23:59:59";
+
+            List<Solicitud> listaSolicitudes = new List<Solicitud>();
+            List<Empresa> empresas = new List<Empresa>();
+            Empresas objEmpresas = new Empresas();
+            empresas = objEmpresas.empresas();
+
+            foreach(var empresa in empresas)
+            {
+                cnObj = conectar.Empresa(empresa.Rfc);
+                if (cnObj != null)
+                {
+                    using (cnObj)
+                    {
+                        SqlCommand cmdObj = new SqlCommand();
+                        cmdObj.Connection = cnObj;
+                        cmdObj.CommandTimeout = 0;
+
+                        //Recibidos-Direccion=1,Emitidos-Direccion=0
+
+                        strSql = "SELECT ";
+                        strSql += "Id, ";
+                        strSql += "FechaInicial, ";
+                        strSql += "FechaFinal, ";
+                        strSql += "TipoSolicitud, ";
+                        strSql += "FechaSolicitud, ";
+                        strSql += "Convert(int,Procesada), ";
+                        strSql += "IdSolicitud, ";
+                        strSql += "Mensaje, ";
+                        strSql += "Direccion ";
+                        strSql += "FROM ";
+                        strSql += "ORI_SOLICITUDES ";
+                        strSql += "WHERE ";
+                        strSql += "FechaInicial = '" + fechaIni + "' and ";
+                        strSql += "FechaFinal = '" + fechaFin + "' and ";
+                        strSql += "Direccion = " + tipo + " and ";
+                        strSql += "TipoSolicitud = 1";
+
+                        cmdObj.CommandText = strSql;
+                        SqlDataReader rdrObj = cmdObj.ExecuteReader();
+                        while (rdrObj.Read())
+                        {
+                            Solicitud solicitud = new Solicitud();
+                            if (rdrObj[6].ToString() != "")
+                            {
+                                solicitud.Rfc = empresa.Rfc;
+                                solicitud.Id = Guid.Parse(rdrObj[0].ToString());
+                                solicitud.FechaInicial = DateTime.Parse(rdrObj[1].ToString());
+                                solicitud.FechaFinal = DateTime.Parse(rdrObj[2].ToString());
+                                solicitud.TipoSolicitud = Convert.ToInt32(rdrObj[3].ToString());
+                                solicitud.FechaSolicitud = DateTime.Parse(rdrObj[4].ToString());
+                                solicitud.Procesada = Convert.ToInt32(rdrObj[5].ToString());
+                                solicitud.IdSolicitud = Guid.Parse(rdrObj[6].ToString());
+                                solicitud.Mensaje = rdrObj[7].ToString();
+                                solicitud.Direccion = Convert.ToInt32(rdrObj[8].ToString());
+
+                                listaSolicitudes.Add(solicitud);
+                            }
+                        }
+                        rdrObj.Close();
+                    }
+                }
+            }
+
+            return listaSolicitudes;
+        }
+
+        public List<Solicitud> solicitudesMetadatos(string rfc, string fechaIni, string fechaFin)
+        {
+            fechaFin += " 23:59:59";
+
             List<Solicitud> listaSolicitudes = new List<Solicitud>();
             
             cnObj = conectar.Empresa(rfc);
@@ -33,42 +172,111 @@ namespace Modelo.Crud
                     cmdObj.Connection = cnObj;
                     cmdObj.CommandTimeout = 0;
 
+                    //Recibidos-Direccion=1,Emitidos-Direccion=0
+
                     strSql = "SELECT ";
                     strSql += "Id, ";
                     strSql += "FechaInicial, ";
                     strSql += "FechaFinal, ";
                     strSql += "TipoSolicitud, ";
                     strSql += "FechaSolicitud, ";
-                    strSql += "Procesada, ";
-                    strSql += "Receptor, ";
+                    strSql += "Convert(int,Procesada), ";
                     strSql += "IdSolicitud, ";
-                    strSql += "Mensaje ";
+                    strSql += "Mensaje, ";
+                    strSql += "Direccion ";
                     strSql += "FROM ";
                     strSql += "ORI_SOLICITUDES ";
                     strSql += "WHERE ";
-                    strSql += "FechaInicial between '"+ fechaIni +"' and '"+ fechaFin +"'";
+                    strSql += "FechaInicial = '" + fechaIni + "' and ";
+                    strSql += "FechaFinal = '" + fechaFin +"' and ";
+                    strSql += "TipoSolicitud = 1";
 
                     cmdObj.CommandText = strSql;
                     SqlDataReader rdrObj = cmdObj.ExecuteReader();
                     while (rdrObj.Read())
                     {
                         Solicitud solicitud = new Solicitud();
-                        solicitud.Rfc = rfc;
-                        solicitud.Id = Guid.Parse(rdrObj[0].ToString());
-                        solicitud.FechaInicial = DateTime.Parse(rdrObj[1].ToString());
-                        solicitud.FechaFinal = DateTime.Parse(rdrObj[2].ToString());
-                        solicitud.TipoSolicitud = Convert.ToInt32(rdrObj[3].ToString());
-                        solicitud.FechaSolicitud = DateTime.Parse(rdrObj[4].ToString());
-                        solicitud.Procesada = Convert.ToInt32(rdrObj[5].ToString());
-                        solicitud.Receptor = Convert.ToInt32(rdrObj[7].ToString());
-                        solicitud.IdSolicitud = Guid.Parse(rdrObj[8].ToString());
-                        solicitud.Mensaje = rdrObj[9].ToString();
+                        if (rdrObj[6].ToString() != "")
+                        {
+                            solicitud.Rfc = rfc;
+                            solicitud.Id = Guid.Parse(rdrObj[0].ToString());
+                            solicitud.FechaInicial = DateTime.Parse(rdrObj[1].ToString());
+                            solicitud.FechaFinal = DateTime.Parse(rdrObj[2].ToString());
+                            solicitud.TipoSolicitud = Convert.ToInt32(rdrObj[3].ToString());
+                            solicitud.FechaSolicitud = DateTime.Parse(rdrObj[4].ToString());
+                            solicitud.Procesada = Convert.ToInt32(rdrObj[5].ToString());
+                            solicitud.IdSolicitud = Guid.Parse(rdrObj[6].ToString());
+                            solicitud.Mensaje = rdrObj[7].ToString();
+                            solicitud.Direccion = Convert.ToInt32(rdrObj[8].ToString());
 
-                        listaSolicitudes.Add(solicitud);
-
+                            listaSolicitudes.Add(solicitud);
+                        }
                     }
                     rdrObj.Close();
                 }       
+            }
+
+            return listaSolicitudes;
+        }
+
+        public List<Solicitud> solicitudesMetadatos(string rfc, string fechaIni, string fechaFin, int tipo)
+        {
+            fechaFin += " 23:59:59";
+
+            List<Solicitud> listaSolicitudes = new List<Solicitud>();
+
+            cnObj = conectar.Empresa(rfc);
+            if (cnObj != null)
+            {
+                using (cnObj)
+                {
+                    SqlCommand cmdObj = new SqlCommand();
+                    cmdObj.Connection = cnObj;
+                    cmdObj.CommandTimeout = 0;
+
+                    //Recibidos-Direccion=1,Emitidos-Direccion=0
+
+                    strSql = "SELECT ";
+                    strSql += "Id, ";
+                    strSql += "FechaInicial, ";
+                    strSql += "FechaFinal, ";
+                    strSql += "TipoSolicitud, ";
+                    strSql += "FechaSolicitud, ";
+                    strSql += "Convert(int,Procesada), ";
+                    strSql += "IdSolicitud, ";
+                    strSql += "Mensaje, ";
+                    strSql += "Direccion ";
+                    strSql += "FROM ";
+                    strSql += "ORI_SOLICITUDES ";
+                    strSql += "WHERE ";
+                    strSql += "FechaInicial = '" + fechaIni + "' and ";
+                    strSql += "FechaFinal = '" + fechaFin + "' and ";
+                    strSql += "Direccion = "+ tipo +" and ";
+                    strSql += "TipoSolicitud = 1";
+
+                    cmdObj.CommandText = strSql;
+                    SqlDataReader rdrObj = cmdObj.ExecuteReader();
+                    while (rdrObj.Read())
+                    {
+                        Solicitud solicitud = new Solicitud();
+                        if (rdrObj[6].ToString() != "")
+                        {
+                            solicitud.Rfc = rfc;
+                            solicitud.Id = Guid.Parse(rdrObj[0].ToString());
+                            solicitud.FechaInicial = DateTime.Parse(rdrObj[1].ToString());
+                            solicitud.FechaFinal = DateTime.Parse(rdrObj[2].ToString());
+                            solicitud.TipoSolicitud = Convert.ToInt32(rdrObj[3].ToString());
+                            solicitud.FechaSolicitud = DateTime.Parse(rdrObj[4].ToString());
+                            solicitud.Procesada = Convert.ToInt32(rdrObj[5].ToString());
+                            solicitud.IdSolicitud = Guid.Parse(rdrObj[6].ToString());
+                            solicitud.Mensaje = rdrObj[7].ToString();
+                            solicitud.Direccion = Convert.ToInt32(rdrObj[8].ToString());
+
+                            listaSolicitudes.Add(solicitud);
+                        }
+                    }
+                    rdrObj.Close();
+                }
             }
 
             return listaSolicitudes;

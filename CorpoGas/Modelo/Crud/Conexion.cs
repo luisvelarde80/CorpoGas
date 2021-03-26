@@ -21,7 +21,7 @@ namespace Modelo.Crud
 
             try
             {
-                con.Open();
+                 con.Open();
                 return con;
             }
             catch (SqlException ex)
@@ -56,6 +56,25 @@ namespace Modelo.Crud
             SqlConnection con = new SqlConnection();
 
             con.ConnectionString = "data source=10.0.3.7;initial catalog=CORPOGAS;user id=sa;password=Infod3x!ra";
+
+            try
+            {
+                con.Open();
+                return con;
+            }
+            catch (SqlException ex)
+            {
+                return null;
+            }
+
+        }
+
+        public SqlConnection Factreview()
+        {
+
+            SqlConnection con = new SqlConnection();
+
+            con.ConnectionString = "data source=10.0.3.1;initial catalog=FACTREVIEW;user id=sa;password=Ofimatic123";
 
             try
             {

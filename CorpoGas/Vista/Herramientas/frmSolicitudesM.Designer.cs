@@ -29,22 +29,42 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnCancelados = new System.Windows.Forms.Button();
+            this.pbProcesando = new System.Windows.Forms.PictureBox();
+            this.lblProcesando = new System.Windows.Forms.Label();
+            this.btnFaltantes = new System.Windows.Forms.Button();
+            this.cmbTipo = new System.Windows.Forms.ComboBox();
+            this.lblTipo = new System.Windows.Forms.Label();
+            this.chbTipo = new System.Windows.Forms.CheckBox();
+            this.btnBuscar = new System.Windows.Forms.Button();
+            this.chbEmpresa = new System.Windows.Forms.CheckBox();
+            this.cmbEmpresa = new System.Windows.Forms.ComboBox();
+            this.lblEmpresa = new System.Windows.Forms.Label();
+            this.dtpFechaFin = new System.Windows.Forms.DateTimePicker();
+            this.dtpFechaIni = new System.Windows.Forms.DateTimePicker();
+            this.lblFechaFin = new System.Windows.Forms.Label();
+            this.lblFechaIni = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.fgSolicitudes = new C1.Win.C1FlexGrid.C1FlexGrid();
-            this.lblFechaIni = new System.Windows.Forms.Label();
-            this.lblFechaFin = new System.Windows.Forms.Label();
-            this.dtpFechaIni = new System.Windows.Forms.DateTimePicker();
-            this.dtpFechaFin = new System.Windows.Forms.DateTimePicker();
-            this.lblEmpresa = new System.Windows.Forms.Label();
-            this.cmbEmpresa = new System.Windows.Forms.ComboBox();
-            this.chbEmpresa = new System.Windows.Forms.CheckBox();
+            this.bgwProcesar = new System.ComponentModel.BackgroundWorker();
+            this.bgwFaltantes = new System.ComponentModel.BackgroundWorker();
+            this.bgwCancelados = new System.ComponentModel.BackgroundWorker();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbProcesando)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fgSolicitudes)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnCancelados);
+            this.groupBox1.Controls.Add(this.pbProcesando);
+            this.groupBox1.Controls.Add(this.lblProcesando);
+            this.groupBox1.Controls.Add(this.btnFaltantes);
+            this.groupBox1.Controls.Add(this.cmbTipo);
+            this.groupBox1.Controls.Add(this.lblTipo);
+            this.groupBox1.Controls.Add(this.chbTipo);
+            this.groupBox1.Controls.Add(this.btnBuscar);
             this.groupBox1.Controls.Add(this.chbEmpresa);
             this.groupBox1.Controls.Add(this.cmbEmpresa);
             this.groupBox1.Controls.Add(this.lblEmpresa);
@@ -59,76 +79,92 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parametros";
             // 
-            // panel1
+            // btnCancelados
             // 
-            this.panel1.Controls.Add(this.fgSolicitudes);
-            this.panel1.Location = new System.Drawing.Point(3, 144);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(516, 179);
-            this.panel1.TabIndex = 1;
+            this.btnCancelados.Enabled = false;
+            this.btnCancelados.Location = new System.Drawing.Point(434, 106);
+            this.btnCancelados.Name = "btnCancelados";
+            this.btnCancelados.Size = new System.Drawing.Size(73, 23);
+            this.btnCancelados.TabIndex = 14;
+            this.btnCancelados.Text = "Cancelados";
+            this.btnCancelados.UseVisualStyleBackColor = true;
+            this.btnCancelados.Click += new System.EventHandler(this.BtnCancelados_Click);
             // 
-            // fgSolicitudes
+            // pbProcesando
             // 
-            this.fgSolicitudes.ColumnInfo = "10,1,0,0,0,95,Columns:";
-            this.fgSolicitudes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.fgSolicitudes.Location = new System.Drawing.Point(0, 0);
-            this.fgSolicitudes.Name = "fgSolicitudes";
-            this.fgSolicitudes.Rows.DefaultSize = 19;
-            this.fgSolicitudes.SelectionMode = C1.Win.C1FlexGrid.SelectionModeEnum.Row;
-            this.fgSolicitudes.Size = new System.Drawing.Size(516, 179);
-            this.fgSolicitudes.TabIndex = 0;
+            this.pbProcesando.Image = global::Vista.Properties.Resources.loaderUpdate_2;
+            this.pbProcesando.Location = new System.Drawing.Point(462, 16);
+            this.pbProcesando.Name = "pbProcesando";
+            this.pbProcesando.Size = new System.Drawing.Size(42, 29);
+            this.pbProcesando.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbProcesando.TabIndex = 13;
+            this.pbProcesando.TabStop = false;
+            this.pbProcesando.Visible = false;
             // 
-            // lblFechaIni
+            // lblProcesando
             // 
-            this.lblFechaIni.AutoSize = true;
-            this.lblFechaIni.Location = new System.Drawing.Point(9, 26);
-            this.lblFechaIni.Name = "lblFechaIni";
-            this.lblFechaIni.Size = new System.Drawing.Size(70, 13);
-            this.lblFechaIni.TabIndex = 0;
-            this.lblFechaIni.Text = "Fecha Inicial:";
+            this.lblProcesando.AutoSize = true;
+            this.lblProcesando.Location = new System.Drawing.Point(395, 23);
+            this.lblProcesando.Name = "lblProcesando";
+            this.lblProcesando.Size = new System.Drawing.Size(64, 13);
+            this.lblProcesando.TabIndex = 12;
+            this.lblProcesando.Text = "Procesando";
+            this.lblProcesando.Visible = false;
             // 
-            // lblFechaFin
+            // btnFaltantes
             // 
-            this.lblFechaFin.AutoSize = true;
-            this.lblFechaFin.Location = new System.Drawing.Point(9, 52);
-            this.lblFechaFin.Name = "lblFechaFin";
-            this.lblFechaFin.Size = new System.Drawing.Size(65, 13);
-            this.lblFechaFin.TabIndex = 1;
-            this.lblFechaFin.Text = "Fecha Final:";
+            this.btnFaltantes.Enabled = false;
+            this.btnFaltantes.Location = new System.Drawing.Point(356, 106);
+            this.btnFaltantes.Name = "btnFaltantes";
+            this.btnFaltantes.Size = new System.Drawing.Size(72, 23);
+            this.btnFaltantes.TabIndex = 11;
+            this.btnFaltantes.Text = "Faltantes";
+            this.btnFaltantes.UseVisualStyleBackColor = true;
+            this.btnFaltantes.Click += new System.EventHandler(this.BtnFaltantes_Click);
             // 
-            // dtpFechaIni
+            // cmbTipo
             // 
-            this.dtpFechaIni.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpFechaIni.Location = new System.Drawing.Point(84, 23);
-            this.dtpFechaIni.Name = "dtpFechaIni";
-            this.dtpFechaIni.Size = new System.Drawing.Size(110, 20);
-            this.dtpFechaIni.TabIndex = 2;
+            this.cmbTipo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbTipo.FormattingEnabled = true;
+            this.cmbTipo.Items.AddRange(new object[] {
+            "Emitidos",
+            "Recibidos"});
+            this.cmbTipo.Location = new System.Drawing.Point(118, 105);
+            this.cmbTipo.Name = "cmbTipo";
+            this.cmbTipo.Size = new System.Drawing.Size(125, 21);
+            this.cmbTipo.TabIndex = 10;
+            this.cmbTipo.Visible = false;
             // 
-            // dtpFechaFin
+            // lblTipo
             // 
-            this.dtpFechaFin.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpFechaFin.Location = new System.Drawing.Point(84, 49);
-            this.dtpFechaFin.Name = "dtpFechaFin";
-            this.dtpFechaFin.Size = new System.Drawing.Size(110, 20);
-            this.dtpFechaFin.TabIndex = 3;
+            this.lblTipo.AutoSize = true;
+            this.lblTipo.Location = new System.Drawing.Point(81, 108);
+            this.lblTipo.Name = "lblTipo";
+            this.lblTipo.Size = new System.Drawing.Size(31, 13);
+            this.lblTipo.TabIndex = 9;
+            this.lblTipo.Text = "Tipo:";
+            this.lblTipo.Visible = false;
             // 
-            // lblEmpresa
+            // chbTipo
             // 
-            this.lblEmpresa.AutoSize = true;
-            this.lblEmpresa.Location = new System.Drawing.Point(9, 108);
-            this.lblEmpresa.Name = "lblEmpresa";
-            this.lblEmpresa.Size = new System.Drawing.Size(51, 13);
-            this.lblEmpresa.TabIndex = 4;
-            this.lblEmpresa.Text = "Empresa:";
+            this.chbTipo.AutoSize = true;
+            this.chbTipo.Location = new System.Drawing.Point(12, 109);
+            this.chbTipo.Name = "chbTipo";
+            this.chbTipo.Size = new System.Drawing.Size(47, 17);
+            this.chbTipo.TabIndex = 8;
+            this.chbTipo.Text = "Tipo";
+            this.chbTipo.UseVisualStyleBackColor = true;
+            this.chbTipo.CheckedChanged += new System.EventHandler(this.ChbTipo_CheckedChanged);
             // 
-            // cmbEmpresa
+            // btnBuscar
             // 
-            this.cmbEmpresa.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbEmpresa.FormattingEnabled = true;
-            this.cmbEmpresa.Location = new System.Drawing.Point(66, 105);
-            this.cmbEmpresa.Name = "cmbEmpresa";
-            this.cmbEmpresa.Size = new System.Drawing.Size(341, 21);
-            this.cmbEmpresa.TabIndex = 5;
+            this.btnBuscar.Location = new System.Drawing.Point(278, 105);
+            this.btnBuscar.Name = "btnBuscar";
+            this.btnBuscar.Size = new System.Drawing.Size(72, 23);
+            this.btnBuscar.TabIndex = 7;
+            this.btnBuscar.Text = "Buscar";
+            this.btnBuscar.UseVisualStyleBackColor = true;
+            this.btnBuscar.Click += new System.EventHandler(this.BtnBuscar_Click);
             // 
             // chbEmpresa
             // 
@@ -139,6 +175,92 @@
             this.chbEmpresa.TabIndex = 6;
             this.chbEmpresa.Text = "Empresa";
             this.chbEmpresa.UseVisualStyleBackColor = true;
+            this.chbEmpresa.CheckedChanged += new System.EventHandler(this.ChbEmpresa_CheckedChanged);
+            // 
+            // cmbEmpresa
+            // 
+            this.cmbEmpresa.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbEmpresa.FormattingEnabled = true;
+            this.cmbEmpresa.Location = new System.Drawing.Point(142, 76);
+            this.cmbEmpresa.Name = "cmbEmpresa";
+            this.cmbEmpresa.Size = new System.Drawing.Size(365, 21);
+            this.cmbEmpresa.TabIndex = 5;
+            this.cmbEmpresa.Visible = false;
+            // 
+            // lblEmpresa
+            // 
+            this.lblEmpresa.AutoSize = true;
+            this.lblEmpresa.Location = new System.Drawing.Point(85, 79);
+            this.lblEmpresa.Name = "lblEmpresa";
+            this.lblEmpresa.Size = new System.Drawing.Size(51, 13);
+            this.lblEmpresa.TabIndex = 4;
+            this.lblEmpresa.Text = "Empresa:";
+            this.lblEmpresa.Visible = false;
+            // 
+            // dtpFechaFin
+            // 
+            this.dtpFechaFin.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpFechaFin.Location = new System.Drawing.Point(84, 49);
+            this.dtpFechaFin.Name = "dtpFechaFin";
+            this.dtpFechaFin.Size = new System.Drawing.Size(110, 20);
+            this.dtpFechaFin.TabIndex = 3;
+            // 
+            // dtpFechaIni
+            // 
+            this.dtpFechaIni.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpFechaIni.Location = new System.Drawing.Point(84, 23);
+            this.dtpFechaIni.Name = "dtpFechaIni";
+            this.dtpFechaIni.Size = new System.Drawing.Size(110, 20);
+            this.dtpFechaIni.TabIndex = 2;
+            // 
+            // lblFechaFin
+            // 
+            this.lblFechaFin.AutoSize = true;
+            this.lblFechaFin.Location = new System.Drawing.Point(9, 52);
+            this.lblFechaFin.Name = "lblFechaFin";
+            this.lblFechaFin.Size = new System.Drawing.Size(65, 13);
+            this.lblFechaFin.TabIndex = 1;
+            this.lblFechaFin.Text = "Fecha Final:";
+            // 
+            // lblFechaIni
+            // 
+            this.lblFechaIni.AutoSize = true;
+            this.lblFechaIni.Location = new System.Drawing.Point(9, 26);
+            this.lblFechaIni.Name = "lblFechaIni";
+            this.lblFechaIni.Size = new System.Drawing.Size(70, 13);
+            this.lblFechaIni.TabIndex = 0;
+            this.lblFechaIni.Text = "Fecha Inicial:";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.fgSolicitudes);
+            this.panel1.Location = new System.Drawing.Point(3, 144);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(516, 179);
+            this.panel1.TabIndex = 1;
+            // 
+            // fgSolicitudes
+            // 
+            this.fgSolicitudes.AllowDragging = C1.Win.C1FlexGrid.AllowDraggingEnum.None;
+            this.fgSolicitudes.AllowEditing = false;
+            this.fgSolicitudes.ColumnInfo = "10,0,0,0,0,95,Columns:";
+            this.fgSolicitudes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fgSolicitudes.Location = new System.Drawing.Point(0, 0);
+            this.fgSolicitudes.Name = "fgSolicitudes";
+            this.fgSolicitudes.Rows.DefaultSize = 19;
+            this.fgSolicitudes.SelectionMode = C1.Win.C1FlexGrid.SelectionModeEnum.Row;
+            this.fgSolicitudes.Size = new System.Drawing.Size(516, 179);
+            this.fgSolicitudes.TabIndex = 0;
+            // 
+            // bgwFaltantes
+            // 
+            this.bgwFaltantes.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BgwFaltantes_DoWork);
+            this.bgwFaltantes.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BgwFaltantes_RunWorkerCompleted);
+            // 
+            // bgwCancelados
+            // 
+            this.bgwCancelados.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BgwCancelados_DoWork);
+            this.bgwCancelados.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BgwCancelados_RunWorkerCompleted);
             // 
             // frmSolicitudesM
             // 
@@ -147,11 +269,13 @@
             this.ClientSize = new System.Drawing.Size(522, 325);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox1);
+            this.MaximizeBox = false;
             this.Name = "frmSolicitudesM";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Solicitudes Metadatos";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbProcesando)).EndInit();
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.fgSolicitudes)).EndInit();
             this.ResumeLayout(false);
@@ -170,5 +294,16 @@
         private System.Windows.Forms.DateTimePicker dtpFechaIni;
         private System.Windows.Forms.Label lblFechaFin;
         private System.Windows.Forms.Label lblFechaIni;
+        private System.Windows.Forms.Button btnBuscar;
+        private System.Windows.Forms.ComboBox cmbTipo;
+        private System.Windows.Forms.Label lblTipo;
+        private System.Windows.Forms.CheckBox chbTipo;
+        private System.Windows.Forms.Button btnFaltantes;
+        private System.ComponentModel.BackgroundWorker bgwProcesar;
+        private System.Windows.Forms.PictureBox pbProcesando;
+        private System.Windows.Forms.Label lblProcesando;
+        private System.Windows.Forms.Button btnCancelados;
+        private System.ComponentModel.BackgroundWorker bgwFaltantes;
+        private System.ComponentModel.BackgroundWorker bgwCancelados;
     }
 }

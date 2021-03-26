@@ -47,25 +47,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Herramientas\frmFaltantes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Herramientas\frmFaltantes.Designer.cs">
+      <DependentUpon>frmFaltantes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Herramientas\frmSolicitudesM.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Herramientas\frmSolicitudesM.Designer.cs">
       <DependentUpon>frmSolicitudesM.cs</DependentUpon>
     </Compile>
-    <Compile Include="Inicio\Form1.cs">
+    <Compile Include="Inicio\frmMdi.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Inicio\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Inicio\frmMdi.Designer.cs">
+      <DependentUpon>frmMdi.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Herramientas\frmFaltantes.resx">
+      <DependentUpon>frmFaltantes.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Herramientas\frmSolicitudesM.resx">
       <DependentUpon>frmSolicitudesM.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Inicio\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Inicio\frmMdi.resx">
+      <DependentUpon>frmMdi.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -76,6 +85,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -99,6 +109,12 @@
       <Project>{AFA5F222-B731-4D0B-AF2B-EF035E930953}</Project>
       <Name>Modelo</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\loaderUpdate_2.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\silverexcel.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
