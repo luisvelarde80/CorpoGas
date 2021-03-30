@@ -29,7 +29,7 @@ namespace Controlador
             }
 
             Faltantes = objArchivos.ProcesaArchivo(tipo);
-            Directory.Delete("C:\\CorpoGas\\Temp", true);
+            objArchivos.EliminaDirectorios();
 
             return Faltantes;
         }
@@ -44,8 +44,7 @@ namespace Controlador
             }
 
             cancelados = objArchivos.ProcesaArchivo(tipo);
-            //Directory.Delete("C:\\CorpoGas\\Temp", true);
-
+            objArchivos.EliminaDirectorios();
             return cancelados;
         }
 

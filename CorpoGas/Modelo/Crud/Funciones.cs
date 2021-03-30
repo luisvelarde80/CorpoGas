@@ -14,7 +14,5 @@ namespace Modelo.Crud
         {
             ZipFile.ExtractToDirectory(Archivo, pathArchivo);
         }
-
     }
-
 }

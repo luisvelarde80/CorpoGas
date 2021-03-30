@@ -105,7 +105,8 @@ namespace Vista.Herramientas
             pbProcesando.Visible = false;
             MessageBox.Show("Proceso Completado", "MENSAJE", MessageBoxButtons.OK, MessageBoxIcon.Information);
             frmFaltantes frmfaltantes = new frmFaltantes(dbFaltantes, 1);
-            frmfaltantes.ShowDialog();
+            frmfaltantes.Show();
+            dtSolicitudes.Rows.Clear();  
             Habilita();
         }
 
@@ -121,6 +122,7 @@ namespace Vista.Herramientas
             MessageBox.Show("Proceso Completado", "MENSAJE", MessageBoxButtons.OK, MessageBoxIcon.Information);
             frmFaltantes frmfaltantes = new frmFaltantes(dbFaltantes, 0);
             frmfaltantes.ShowDialog();
+            dtSolicitudes.Rows.Clear();
             Habilita();
         }
 

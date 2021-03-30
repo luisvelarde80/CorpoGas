@@ -35,6 +35,7 @@
             this.tsmiHScfdi = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiHfacturacion = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiHFcomparativoMeta = new System.Windows.Forms.ToolStripMenuItem();
+            this.descargaXMLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,20 +70,21 @@
             // tsmiHSmetadatos
             // 
             this.tsmiHSmetadatos.Name = "tsmiHSmetadatos";
-            this.tsmiHSmetadatos.Size = new System.Drawing.Size(180, 22);
+            this.tsmiHSmetadatos.Size = new System.Drawing.Size(130, 22);
             this.tsmiHSmetadatos.Text = "Metadatos";
             this.tsmiHSmetadatos.Click += new System.EventHandler(this.TsmiHSmetadatos_Click);
             // 
             // tsmiHScfdi
             // 
             this.tsmiHScfdi.Name = "tsmiHScfdi";
-            this.tsmiHScfdi.Size = new System.Drawing.Size(180, 22);
+            this.tsmiHScfdi.Size = new System.Drawing.Size(130, 22);
             this.tsmiHScfdi.Text = "Cfdi";
             // 
             // tsmiHfacturacion
             // 
             this.tsmiHfacturacion.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiHFcomparativoMeta});
+            this.tsmiHFcomparativoMeta,
+            this.descargaXMLToolStripMenuItem});
             this.tsmiHfacturacion.Name = "tsmiHfacturacion";
             this.tsmiHfacturacion.Size = new System.Drawing.Size(180, 22);
             this.tsmiHfacturacion.Text = "Facturación";
@@ -92,6 +94,12 @@
             this.tsmiHFcomparativoMeta.Name = "tsmiHFcomparativoMeta";
             this.tsmiHFcomparativoMeta.Size = new System.Drawing.Size(211, 22);
             this.tsmiHFcomparativoMeta.Text = "Comparativo vs Metadato";
+            // 
+            // descargaXMLToolStripMenuItem
+            // 
+            this.descargaXMLToolStripMenuItem.Name = "descargaXMLToolStripMenuItem";
+            this.descargaXMLToolStripMenuItem.Size = new System.Drawing.Size(211, 22);
+            this.descargaXMLToolStripMenuItem.Text = "Descarga XML";
             // 
             // frmMdi
             // 
@@ -121,6 +129,7 @@
         private System.Windows.Forms.ToolStripMenuItem tsmiHScfdi;
         private System.Windows.Forms.ToolStripMenuItem tsmiHfacturacion;
         private System.Windows.Forms.ToolStripMenuItem tsmiHFcomparativoMeta;
+        private System.Windows.Forms.ToolStripMenuItem descargaXMLToolStripMenuItem;
     }
 }
 

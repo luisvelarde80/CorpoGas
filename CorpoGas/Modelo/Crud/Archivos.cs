@@ -22,121 +22,7 @@ namespace Modelo.Crud
         public void Metadato(string rfc, Guid Id,int direccion)
         {
 
-            //direccion- 0 = Emitidos, 1 = Recibidos, Ambos = 2
-
-            //Se crea la carpeta temporal para descargar los archivos
-            string pathTemp = @"C:\CorpoGas";
-            if (!Directory.Exists(pathTemp))
-            {
-                Directory.CreateDirectory(pathTemp);
-                pathTemp += "\\Temp";
-                if (!Directory.Exists(pathTemp))
-                {
-                    Directory.CreateDirectory(pathTemp);
-                    switch (direccion)
-                    {
-                        case 0:
-                            pathTemp += "\\Emitidos";
-                            if (!Directory.Exists(pathTemp))
-                            {
-                                Directory.CreateDirectory(pathTemp);
-                            }
-                            break;
-
-                        case 1:
-                            pathTemp += "\\Recibidos";
-                            if (!Directory.Exists(pathTemp))
-                            {
-                                Directory.CreateDirectory(pathTemp);
-                            }
-                            break;
-
-                        case 2:
-                            string pathAmbos = pathTemp + "\\Emitidos";
-                            if (!Directory.Exists(pathAmbos))
-                            {
-                                Directory.CreateDirectory(pathAmbos);
-                            }
-                            pathAmbos = pathTemp + "\\Recibidos";
-                            if (!Directory.Exists(pathAmbos))
-                            {
-                                Directory.CreateDirectory(pathAmbos);
-                            }
-                            break;
-                    }
-                }
-            }
-            else
-            {
-                pathTemp += "\\Temp";
-                if (!Directory.Exists(pathTemp))
-                {
-                    Directory.CreateDirectory(pathTemp);
-                    switch (direccion)
-                    {
-                        case 0:
-                            pathTemp += "\\Emitidos";
-                            if (!Directory.Exists(pathTemp))
-                            {
-                                Directory.CreateDirectory(pathTemp);
-                            }
-                            break;
-
-                        case 1:
-                            pathTemp += "\\Recibidos";
-                            if (!Directory.Exists(pathTemp))
-                            {
-                                Directory.CreateDirectory(pathTemp);
-                            }
-                            break;
-                        case 2:
-                            string pathAmbos = pathTemp + "\\Emitidos";
-                            if (!Directory.Exists(pathAmbos))
-                            {
-                                Directory.CreateDirectory(pathAmbos);
-                            }
-                            pathAmbos = pathTemp + "\\Recibidos";
-                            if (!Directory.Exists(pathAmbos))
-                            {
-                                Directory.CreateDirectory(pathAmbos);
-                            }
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (direccion)
-                    {
-                        case 0:
-                            pathTemp += "\\Emitidos";
-                            if (!Directory.Exists(pathTemp))
-                            {
-                                Directory.CreateDirectory(pathTemp);
-                            }
-                            break;
-
-                        case 1:
-                            pathTemp += "\\Recibidos";
-                            if (!Directory.Exists(pathTemp))
-                            {
-                                Directory.CreateDirectory(pathTemp);
-                            }
-                            break;
-                        case 2:
-                            string pathAmbos = pathTemp + "\\Emitidos";
-                            if (!Directory.Exists(pathAmbos))
-                            {
-                                Directory.CreateDirectory(pathAmbos);
-                            }
-                            pathAmbos = pathTemp + "\\Recibidos";
-                            if (!Directory.Exists(pathAmbos))
-                            {
-                                Directory.CreateDirectory(pathAmbos);
-                            }
-                            break;
-                    }
-                }
-            }
+            string pathTemp = CreaDirectorio(rfc, direccion);
 
             Conexion conectar = new Conexion();
             cnObj = conectar.Empresa(rfc);
@@ -161,19 +47,25 @@ namespace Modelo.Crud
                     {
                         while (rdrObj.Read())
                         {
-                            var Resul = new byte[(rdrObj.GetBytes(0, 0, null, 0, int.MaxValue))];
-                            rdrObj.GetBytes(0, 0, Resul, 0, Resul.Length);
+                            if(rdrObj[0] is DBNull)
+                            {
 
-                            using (var fs = new FileStream(pathTemp + "\\" + Id + ".zip", FileMode.Create, FileAccess.Write))
-                                fs.Write(Resul, 0, Resul.Length);
+                            }
+                            else
+                            {
+                                var Resul = new byte[(rdrObj.GetBytes(0, 0, null, 0, int.MaxValue))];
+                                rdrObj.GetBytes(0, 0, Resul, 0, Resul.Length);
+
+                                using (var fs = new FileStream(pathTemp + "\\" + Id + ".zip", FileMode.Create, FileAccess.Write))
+                                    fs.Write(Resul, 0, Resul.Length);
+                                objFunciones.Descomprime(pathTemp + "\\" + Id, pathTemp + "\\" + Id + ".zip");
+                                File.Delete(pathTemp + "\\" + Id + ".zip");
+                            }
                         }
                         rdrObj.Close();
                     }
                 }
             }
-            objFunciones.Descomprime(pathTemp + "\\" + Id, pathTemp + "\\" + Id + ".zip");
-            File.Delete(pathTemp + "\\" + Id + ".zip");
-            //ProcesaArchivo(pathTemp + "\\" + Id, direccion);
         }
 
         public List<Faltantes> ProcesaArchivo(int tipo)
@@ -296,9 +188,8 @@ namespace Modelo.Crud
                                 cuenta += 1;
                             }
                         }
-                        File.Delete(archivoEmitido);
+                        //File.Delete(archivoEmitido);
                     }
-                    //Directory.Delete(pathEmitidos,true);
                 }
 
                 if (pathRecibidos.Length > 0)
@@ -402,9 +293,8 @@ namespace Modelo.Crud
                                 cuenta += 1;
                             }
                         }
-                        File.Delete(archivoRecibido);
+                        //File.Delete(archivoRecibido);
                     }
-                    //Directory.Delete(pathRecibidos,true);
                 }
             }
             else if(tipo == 2){
@@ -507,9 +397,7 @@ namespace Modelo.Crud
                                 cuenta += 1;
                             }
                         }
-                        File.Delete(archivoEmitido);
                     }
-                    //Directory.Delete(pathEmitidos,true);
                     CancelaDocumentos(listaFaltante, 0);
                 }
 
@@ -610,9 +498,7 @@ namespace Modelo.Crud
                                 cuenta += 1;
                             }
                         }
-                        File.Delete(archivoRecibido);
                     }
-                    //Directory.Delete(pathRecibidos,true);
                     CancelaDocumentos(listaFaltante, 1);
                 }
             }
@@ -788,5 +674,133 @@ namespace Modelo.Crud
                 }
             }
         }
+
+        private string CreaDirectorio(string rfc, int direccion)
+        {
+
+            //direccion- 0 = Emitidos, 1 = Recibidos, Ambos = 2
+            //Se crea la carpeta temporal para descargar los archivos
+
+            string pathTemp = @"C:\CorpoGas";
+            if (!Directory.Exists(pathTemp))
+            {
+                Directory.CreateDirectory(pathTemp);
+                pathTemp += "\\Temp";
+                if (!Directory.Exists(pathTemp))
+                {
+                    Directory.CreateDirectory(pathTemp);
+                    switch (direccion)
+                    {
+                        case 0:
+                            pathTemp += "\\Emitidos";
+                            if (!Directory.Exists(pathTemp))
+                            {
+                                Directory.CreateDirectory(pathTemp);
+                            }
+                            break;
+
+                        case 1:
+                            pathTemp += "\\Recibidos";
+                            if (!Directory.Exists(pathTemp))
+                            {
+                                Directory.CreateDirectory(pathTemp);
+                            }
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (direccion)
+                    {
+                        case 0:
+                            pathTemp += "\\Emitidos";
+                            if (!Directory.Exists(pathTemp))
+                            {
+                                Directory.CreateDirectory(pathTemp);
+                            }
+                            break;
+
+                        case 1:
+                            pathTemp += "\\Recibidos";
+                            if (!Directory.Exists(pathTemp))
+                            {
+                                Directory.CreateDirectory(pathTemp);
+                            }
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                pathTemp += "\\Temp";
+                if (!Directory.Exists(pathTemp))
+                {
+                    Directory.CreateDirectory(pathTemp);
+                    switch (direccion)
+                    {
+                        case 0:
+                            pathTemp += "\\Emitidos";
+                            if (!Directory.Exists(pathTemp))
+                            {
+                                Directory.CreateDirectory(pathTemp);
+                            }
+                            break;
+
+                        case 1:
+                            pathTemp += "\\Recibidos";
+                            if (!Directory.Exists(pathTemp))
+                            {
+                                Directory.CreateDirectory(pathTemp);
+                            }
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (direccion)
+                    {
+                        case 0:
+                            pathTemp += "\\Emitidos";
+                            if (!Directory.Exists(pathTemp))
+                            {
+                                Directory.CreateDirectory(pathTemp);
+                            }
+                            break;
+
+                        case 1:
+                            pathTemp += "\\Recibidos";
+                            if (!Directory.Exists(pathTemp))
+                            {
+                                Directory.CreateDirectory(pathTemp);
+                            }
+                            break;
+                    }
+                }
+            }
+            return pathTemp;
+        }
+
+        public void EliminaDirectorios()
+        {
+
+            string pathTemp = @"C:\CorpoGas\Temp";
+            string[] directorios = Directory.GetDirectories(pathTemp);
+
+            foreach(var directorio in directorios)
+            {
+                string[] subdirectorios = Directory.GetDirectories(directorio);
+                foreach(var subdirectorio in subdirectorios)
+                {
+                    string[] archivos = Directory.GetFiles(subdirectorio, "*.txt", SearchOption.AllDirectories);
+                    foreach(var archivo in archivos)
+                    {
+                        File.Delete(archivo);
+                    }
+                    Directory.Delete(subdirectorio);
+                }
+                Directory.Delete(directorio);
+            }
+        }
+
     }
 }

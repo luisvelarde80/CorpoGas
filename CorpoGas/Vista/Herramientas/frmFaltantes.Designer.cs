@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnExportar = new System.Windows.Forms.Button();
             this.fgFaltantes = new C1.Win.C1FlexGrid.C1FlexGrid();
+            this.btnExportar = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fgFaltantes)).BeginInit();
             this.SuspendLayout();
@@ -43,15 +43,6 @@
             this.panel1.Size = new System.Drawing.Size(610, 211);
             this.panel1.TabIndex = 0;
             // 
-            // btnExportar
-            // 
-            this.btnExportar.Image = global::Vista.Properties.Resources.silverexcel;
-            this.btnExportar.Location = new System.Drawing.Point(556, 216);
-            this.btnExportar.Name = "btnExportar";
-            this.btnExportar.Size = new System.Drawing.Size(42, 35);
-            this.btnExportar.TabIndex = 1;
-            this.btnExportar.UseVisualStyleBackColor = true;
-            // 
             // fgFaltantes
             // 
             this.fgFaltantes.ColumnInfo = "10,0,0,0,0,95,Columns:0{Width:25;}\t";
@@ -62,6 +53,16 @@
             this.fgFaltantes.SelectionMode = C1.Win.C1FlexGrid.SelectionModeEnum.Row;
             this.fgFaltantes.Size = new System.Drawing.Size(610, 211);
             this.fgFaltantes.TabIndex = 0;
+            // 
+            // btnExportar
+            // 
+            this.btnExportar.Image = global::Vista.Properties.Resources.silverexcel;
+            this.btnExportar.Location = new System.Drawing.Point(556, 216);
+            this.btnExportar.Name = "btnExportar";
+            this.btnExportar.Size = new System.Drawing.Size(42, 35);
+            this.btnExportar.TabIndex = 1;
+            this.btnExportar.UseVisualStyleBackColor = true;
+            this.btnExportar.Click += new System.EventHandler(this.BtnExportar_Click);
             // 
             // frmFaltantes
             // 
