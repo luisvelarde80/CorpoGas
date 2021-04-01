@@ -34,6 +34,16 @@ namespace Controlador
             return Faltantes;
         }
 
+        public void Cfdi(DataTable dtSolicitudes, int tipo)
+        {
+            List<Faltantes> Faltantes = new List<Faltantes>();
+
+            foreach (DataRow row in dtSolicitudes.Rows)
+            {
+                objArchivos.Cfdi(row[0].ToString(), Guid.Parse(row[1].ToString()), Convert.ToInt32(row[2].ToString()));
+            }
+        }
+
         public List<Faltantes> Cancelados(DataTable dtSolicitudes, int tipo)
         {
             List<Faltantes> cancelados = new List<Faltantes>();

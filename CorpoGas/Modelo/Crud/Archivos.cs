@@ -19,14 +19,16 @@ namespace Modelo.Crud
 
         #endregion
 
-        public void Metadato(string rfc, Guid Id,int direccion)
+        #region "Funciones"
+
+        public void Metadato(string rfc, Guid Id, int direccion)
         {
 
-            string pathTemp = CreaDirectorio(rfc, direccion);
+            string pathTemp = CreaDirectorio(direccion);
 
             Conexion conectar = new Conexion();
             cnObj = conectar.Empresa(rfc);
-            if(cnObj != null)
+            if (cnObj != null)
             {
                 using (cnObj)
                 {
@@ -43,11 +45,60 @@ namespace Modelo.Crud
 
                     cmdObj.CommandText = strSql;
                     SqlDataReader rdrObj = cmdObj.ExecuteReader();
-                    if(rdrObj.HasRows == true)
+                    if (rdrObj.HasRows == true)
                     {
                         while (rdrObj.Read())
                         {
-                            if(rdrObj[0] is DBNull)
+                            if (rdrObj[0] is DBNull)
+                            {
+
+                            }
+                            else
+                            {
+                                var Resul = new byte[(rdrObj.GetBytes(0, 0, null, 0, int.MaxValue))];
+                                rdrObj.GetBytes(0, 0, Resul, 0, Resul.Length);
+
+                                using (var fs = new FileStream(pathTemp + "\\" + Id + ".zip", FileMode.Create, FileAccess.Write))
+                                    fs.Write(Resul, 0, Resul.Length);
+                                objFunciones.Descomprime(pathTemp + "\\" + Id, pathTemp + "\\" + Id + ".zip");
+                                File.Delete(pathTemp + "\\" + Id + ".zip");
+                            }
+                        }
+                        rdrObj.Close();
+                    }
+                }
+            }
+        }
+
+        public void Cfdi(string rfc, Guid Id, int direccion)
+        {
+
+            string pathTemp = CreaDirectorio(direccion);
+
+            Conexion conectar = new Conexion();
+            cnObj = conectar.Empresa(rfc);
+            if (cnObj != null)
+            {
+                using (cnObj)
+                {
+                    SqlCommand cmdObj = new SqlCommand();
+                    cmdObj.Connection = cnObj;
+                    cmdObj.CommandTimeout = 0;
+
+                    strSql = "SELECT ";
+                    strSql += "Archivos ";
+                    strSql += "FROM ";
+                    strSql += "ORI_SOLICITUDES ";
+                    strSql += "WHERE ";
+                    strSql += "Id = '" + Id + "'";
+
+                    cmdObj.CommandText = strSql;
+                    SqlDataReader rdrObj = cmdObj.ExecuteReader();
+                    if (rdrObj.HasRows == true)
+                    {
+                        while (rdrObj.Read())
+                        {
+                            if (rdrObj[0] is DBNull)
                             {
 
                             }
@@ -74,7 +125,7 @@ namespace Modelo.Crud
             //tipo 1 = Metadatos, 2 = Cancelados
             string pathEmitidos = "";
             string pathRecibidos = "";
-            List<Faltantes> listaFaltante = new List<Faltantes>(); 
+            List<Faltantes> listaFaltante = new List<Faltantes>();
 
             if (Directory.Exists("C:\\CorpoGas\\Temp\\Emitidos"))
             {
@@ -85,15 +136,15 @@ namespace Modelo.Crud
                 pathRecibidos = "C:\\CorpoGas\\Temp\\Recibidos";
             }
 
-            if(tipo == 1)
+            if (tipo == 1)
             {
                 if (pathEmitidos.Length > 0)
                 {
                     string[] archivosEmitidos = Directory.GetFiles(pathEmitidos, "*.txt", SearchOption.AllDirectories);
-                    
+
                     foreach (var archivoEmitido in archivosEmitidos)
                     {
-                        
+
                         string[] Lineas = System.IO.File.ReadAllLines(archivoEmitido);
                         string lineaIncompleta = null;
                         string lineaAux = null;
@@ -297,7 +348,8 @@ namespace Modelo.Crud
                     }
                 }
             }
-            else if(tipo == 2){
+            else if (tipo == 2)
+            {
 
                 if (pathEmitidos.Length > 0)
                 {
@@ -516,7 +568,7 @@ namespace Modelo.Crud
                     case 0:
 
                         cnObj = conectar.Empresa(documento.RFCEmisor);
-                        if(cnObj != null)
+                        if (cnObj != null)
                         {
                             using (cnObj)
                             {
@@ -528,7 +580,7 @@ namespace Modelo.Crud
                                 strSql += "ORI_DOCUMENTOSEMITIDOS ";
                                 strSql += "SET ";
                                 strSql += "VigenciaSat = 0, ";
-                                strSql += "FechaCancelacion = '"+ documento.FechaCancelacion.ToString("yyyyMMdd") +"' ";
+                                strSql += "FechaCancelacion = '" + documento.FechaCancelacion.ToString("yyyyMMdd") + "' ";
                                 strSql += "WHERE ";
                                 strSql += "Uuid = '" + documento.Uudi + "'";
 
@@ -536,7 +588,8 @@ namespace Modelo.Crud
                                 try
                                 {
                                     cmdObj.ExecuteNonQuery();
-                                }catch(SqlException ex)
+                                }
+                                catch (SqlException ex)
                                 {
 
                                 }
@@ -551,14 +604,15 @@ namespace Modelo.Crud
                                 try
                                 {
                                     cmdObj.ExecuteNonQuery();
-                                }catch(SqlException ex)
+                                }
+                                catch (SqlException ex)
                                 {
 
                                 }
 
                                 SqlConnection cnOtr = new SqlConnection();
                                 cnOtr = conectar.Factreview();
-                                if(cnOtr != null)
+                                if (cnOtr != null)
                                 {
                                     using (cnOtr)
                                     {
@@ -595,7 +649,7 @@ namespace Modelo.Crud
                     case 1:
 
                         cnObj = conectar.Empresa(documento.RFCReceptor);
-                        if(cnObj != null)
+                        if (cnObj != null)
                         {
                             using (cnObj)
                             {
@@ -639,7 +693,7 @@ namespace Modelo.Crud
 
                                 SqlConnection cnOtr = new SqlConnection();
                                 cnOtr = conectar.Factreview();
-                                if(cnOtr != null)
+                                if (cnOtr != null)
                                 {
                                     using (cnOtr)
                                     {
@@ -675,7 +729,7 @@ namespace Modelo.Crud
             }
         }
 
-        private string CreaDirectorio(string rfc, int direccion)
+        private string CreaDirectorio(int direccion)
         {
 
             //direccion- 0 = Emitidos, 1 = Recibidos, Ambos = 2
@@ -786,13 +840,13 @@ namespace Modelo.Crud
             string pathTemp = @"C:\CorpoGas\Temp";
             string[] directorios = Directory.GetDirectories(pathTemp);
 
-            foreach(var directorio in directorios)
+            foreach (var directorio in directorios)
             {
                 string[] subdirectorios = Directory.GetDirectories(directorio);
-                foreach(var subdirectorio in subdirectorios)
+                foreach (var subdirectorio in subdirectorios)
                 {
                     string[] archivos = Directory.GetFiles(subdirectorio, "*.txt", SearchOption.AllDirectories);
-                    foreach(var archivo in archivos)
+                    foreach (var archivo in archivos)
                     {
                         File.Delete(archivo);
                     }
@@ -802,5 +856,8 @@ namespace Modelo.Crud
             }
         }
 
+        #endregion
+
     }
+
 }

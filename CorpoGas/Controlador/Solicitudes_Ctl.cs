@@ -40,6 +40,30 @@ namespace Controlador
 
         #endregion
 
+        #region "Cfdi"
+
+        public List<Solicitud> solicitudesCfdi(string fechaIni, string fechaFin)
+        {
+            return objSolicitudes.solicitudesCfdi(fechaIni,fechaFin);
+        }
+
+        public List<Solicitud> solicitudesCfdi(string fechaIni, string fechaFin, int tipo)
+        {
+            return objSolicitudes.solicitudesCfdi(fechaIni,fechaFin,tipo);
+        }
+
+        public List<Solicitud> solicitudesCfdi(string rfc, string fechaIni, string fechaFin)
+        {
+            return objSolicitudes.solicitudesCfdi(rfc,fechaIni,fechaFin);
+        }
+
+        public List<Solicitud> solicitudesCfdi(string rfc, string fechaIni, string fechaFin, int tipo)
+        {
+            return objSolicitudes.solicitudesCfdi(rfc,fechaIni,fechaFin,tipo);
+        }
+
+        #endregion
+
     }
 
 }

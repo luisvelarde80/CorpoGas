@@ -13,19 +13,37 @@ namespace Vista
 {
     public partial class frmMdi : Form
     {
+
+        #region "Constructor"
+
         public frmMdi()
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
         }
 
+        #endregion
+
         #region "Herramientas"
 
         private void TsmiHSmetadatos_Click(object sender, EventArgs e)
         {
-            frmSolicitudesM frmsolicitudes = new frmSolicitudesM();
-            frmsolicitudes.MdiParent = this;
+            frmSolicitudesM frmsolicitudes = new frmSolicitudesM
+            {
+                MdiParent = this
+            };
             frmsolicitudes.Show();
+        }
+
+        private void TsmiHScfdi_Click(object sender, EventArgs e)
+        {
+
+            frmSolicitudesC frmsolicitudesC = new frmSolicitudesC
+            {
+                MdiParent = this
+            };
+            frmsolicitudesC.Show();
+
         }
 
         #endregion

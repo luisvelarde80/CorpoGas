@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cfdi\cfdv33_tdCFDI_catCFDI.cs" />
     <Compile Include="Crud\Archivos.cs" />
     <Compile Include="Crud\Conexion.cs" />
     <Compile Include="Crud\Empresas.cs" />
