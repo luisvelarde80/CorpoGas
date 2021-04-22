@@ -207,12 +207,8 @@ namespace Vista.Herramientas
         Solicitudes_Ctl objSolicitudes = new Solicitudes_Ctl();
         Archivos_Ctl objArchivo = new Archivos_Ctl();
         DataTable dtSolicitudes = new DataTable();
-        BindingSource dbFaltantes = new BindingSource();
-
-
 
         #endregion
-
 
     }
 }

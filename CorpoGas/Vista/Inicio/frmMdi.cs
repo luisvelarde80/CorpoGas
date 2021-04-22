@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vista.Herramientas;
+using Vista.Facturacion;
 
 namespace Vista
 {
@@ -48,5 +49,28 @@ namespace Vista
 
         #endregion
 
+        #region "Facturacion"
+
+        private void TsmiHFcomparativoMeta_Click(object sender, EventArgs e)
+        {
+            frmComparativoM frmcomparativoM = new frmComparativoM
+            {
+                MdiParent = this
+            };
+            frmcomparativoM.Show();
+        }
+
+        private void TsmiFacDescargaXml_Click(object sender, EventArgs e)
+        {
+            frmDescargaXml frmdescargaxml = new frmDescargaXml
+            {
+                MdiParent = this
+            };
+            frmdescargaxml.Show();
+        }
+
+        #endregion
+
     }
+
 }

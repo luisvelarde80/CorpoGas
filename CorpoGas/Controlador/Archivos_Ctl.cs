@@ -44,6 +44,11 @@ namespace Controlador
             }
         }
 
+        public Boolean Xml(string rfc, string Uuid)
+        {
+            return objArchivos.Xml(rfc, Uuid);
+        }
+
         public List<Faltantes> Cancelados(DataTable dtSolicitudes, int tipo)
         {
             List<Faltantes> cancelados = new List<Faltantes>();
@@ -56,6 +61,14 @@ namespace Controlador
             cancelados = objArchivos.ProcesaArchivo(tipo);
             objArchivos.EliminaDirectorios();
             return cancelados;
+        }
+
+        public List<Faltantes> ProcesaArchivo(string archivo, int tipo)
+        {
+            List<Faltantes> Faltantes = new List<Faltantes>();
+
+            Faltantes = objArchivos.ProcesaArchivo(archivo, tipo);
+            return Faltantes;
         }
 
     }

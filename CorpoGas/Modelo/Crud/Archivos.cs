@@ -91,7 +91,7 @@ namespace Modelo.Crud
                     strSql += "ORI_SOLICITUDES ";
                     strSql += "WHERE ";
                     strSql += "Id = '" + Id + "'";
-
+                    
                     cmdObj.CommandText = strSql;
                     SqlDataReader rdrObj = cmdObj.ExecuteReader();
                     if (rdrObj.HasRows == true)
@@ -117,6 +117,51 @@ namespace Modelo.Crud
                     }
                 }
             }
+        }
+
+        public Boolean Xml(string rfc, string Uuid)
+        {
+            string pathTemp = CreaDirectorio(2);
+            Boolean Respuesta = false;
+
+            Conexion conectar = new Conexion();
+            cnObj = conectar.Empresa(rfc);
+            if (cnObj != null)
+            {
+                using (cnObj)
+                {
+                    SqlCommand cmdObj = new SqlCommand();
+                    cmdObj.Connection = cnObj;
+                    cmdObj.CommandTimeout = 0;
+
+                    string strSql;
+
+                    strSql = "SELECT ";
+                    strSql += "Xml ";
+                    strSql += "FROM ";
+                    strSql += "ORI_CFDIXML ";
+                    strSql += "WHERE ";
+                    strSql += "Uuid = '" + Uuid + "'";
+
+                    cmdObj.CommandText = strSql;
+                    SqlDataReader rdrObj = cmdObj.ExecuteReader();
+                    if (rdrObj.HasRows == true)
+                    {
+                        while (rdrObj.Read())
+                        {
+                            var Resul = new byte[(rdrObj.GetBytes(0, 0, null, 0, int.MaxValue))];
+                            rdrObj.GetBytes(0, 0, Resul, 0, Resul.Length);
+
+                            using (var fs = new FileStream(pathTemp + "\\" + Uuid + ".xml", FileMode.Create, FileAccess.Write))
+                                fs.Write(Resul, 0, Resul.Length);
+
+                            Respuesta = true;
+                        }
+                        rdrObj.Close();
+                    }
+                }
+            }
+            return Respuesta;
         }
 
         public List<Faltantes> ProcesaArchivo(int tipo)
@@ -239,7 +284,6 @@ namespace Modelo.Crud
                                 cuenta += 1;
                             }
                         }
-                        //File.Delete(archivoEmitido);
                     }
                 }
 
@@ -344,7 +388,6 @@ namespace Modelo.Crud
                                 cuenta += 1;
                             }
                         }
-                        //File.Delete(archivoRecibido);
                     }
                 }
             }
@@ -558,6 +601,220 @@ namespace Modelo.Crud
             return listaFaltante;
         }
 
+        public List<Faltantes> ProcesaArchivo(string archivo,int tipo)
+        {
+            //tipo- 0 = Emitidos, 1 = Recibidos
+            List<Faltantes> listaFaltante = new List<Faltantes>();
+
+            if (tipo == 0)
+            {
+                if (archivo.Length > 0)
+                {
+                    string[] Lineas = System.IO.File.ReadAllLines(archivo);
+                    string lineaIncompleta = null;
+                    string lineaAux = null;
+
+                    int cuenta = 0;
+                    Boolean lineaCompleta = true;
+
+                    foreach (var linea in Lineas)
+                    {
+                        Conexion conectar = new Conexion();
+                        if (cuenta > 0)
+                        {
+                            if (lineaCompleta != true)
+                            {
+                                lineaAux = lineaIncompleta + linea;
+                            }
+                            else
+                            {
+                                lineaAux = linea;
+                            }
+
+                            string[] Elementos = lineaAux.Trim().Split('~');
+                            int separadores = lineaAux.Split('~').Count();
+
+                            if (separadores == 12)
+                            {
+                                cnObj = conectar.Empresa(Elementos[1].ToString());
+                                if (Elementos[11].ToString() == "")
+                                {
+                                    if (cnObj != null)
+                                    {
+                                        using (cnObj)
+                                        {
+                                            SqlCommand cmdObj = new SqlCommand();
+                                            cmdObj.Connection = cnObj;
+                                            cmdObj.CommandTimeout = 0;
+
+                                            strSql = "SELECT ";
+                                            strSql += "* ";
+                                            strSql += "FROM ";
+                                            strSql += "ORI_DOCUMENTOSEMITIDOS ";
+                                            strSql += "WHERE ";
+                                            strSql += "Uuid = '" + Elementos[0].ToString() + "'";
+
+                                            cmdObj.CommandText = strSql;
+                                            SqlDataReader rdrObj = cmdObj.ExecuteReader();
+                                            if (rdrObj.HasRows != true)
+                                            {
+                                                Faltantes faltantes = new Faltantes();
+                                                faltantes = new Faltantes();
+                                                faltantes.Tipo = "EMITIDO";
+                                                faltantes.Uudi = Elementos[0].ToString();
+                                                faltantes.RFCEmisor = Elementos[1].ToString();
+                                                faltantes.NombreEmisor = Elementos[2].ToString();
+                                                faltantes.RFCReceptor = Elementos[3].ToString();
+                                                faltantes.NombreReceptor = Elementos[4].ToString();
+                                                faltantes.RFCPac = Elementos[5].ToString();
+                                                faltantes.FechaEmision = Convert.ToDateTime(Elementos[6].ToString());
+                                                faltantes.FechaCer = Convert.ToDateTime(Elementos[7].ToString());
+                                                faltantes.Monto = Convert.ToDouble(Elementos[8].ToString());
+                                                faltantes.Efecto = Elementos[9].ToString();
+                                                faltantes.Estatus = Elementos[10].ToString();
+                                                if (Elementos[11].ToString() != "")
+                                                {
+                                                    faltantes.FechaCancelacion = Convert.ToDateTime(Elementos[11].ToString());
+
+                                                }
+                                                listaFaltante.Add(faltantes);
+                                            }
+                                        }
+                                        cnObj.Close();
+                                    }
+                                }
+                                else
+                                {
+                                    if(cnObj.State == System.Data.ConnectionState.Open)
+                                    {
+                                        cnObj.Close();
+                                    } 
+                                }
+
+                                lineaCompleta = true;
+                            }
+                            else
+                            {
+                                lineaCompleta = false;
+                                lineaIncompleta = linea;
+                            }
+
+                            cuenta += 1;
+                        }
+                        else
+                        {
+                            cuenta += 1;
+                        }
+                    }
+                    CancelaDocumentos(listaFaltante, 0);
+                } 
+            }
+            else if (tipo == 1)
+            {
+                if (archivo.Length > 0)
+                {
+                    string[] Lineas = System.IO.File.ReadAllLines(archivo);
+                    string lineaIncompleta = null;
+                    string lineaAux = null;
+
+                    int cuenta = 0;
+                    Boolean lineaCompleta = true;
+
+                    Conexion conectar = new Conexion();
+
+                    foreach (var linea in Lineas)
+                    {
+                        if (cuenta > 0)
+                        {
+                            if (lineaCompleta != true)
+                            {
+                                lineaAux = lineaIncompleta + linea;
+                            }
+                            else
+                            {
+                                lineaAux = linea;
+                            }
+
+                            string[] Elementos = lineaAux.Trim().Split('~');
+                            int separadores = lineaAux.Split('~').Count();
+
+                            if (separadores == 12)
+                            {
+                                cnObj = conectar.Empresa(Elementos[3].ToString());
+                                if (Elementos[11].ToString() == "")
+                                {
+                                    if (cnObj != null)
+                                    {
+                                        using (cnObj)
+                                        {
+                                            SqlCommand cmdObj = new SqlCommand();
+                                            cmdObj.Connection = cnObj;
+                                            cmdObj.CommandTimeout = 0;
+
+                                            strSql = "SELECT ";
+                                            strSql += "* ";
+                                            strSql += "FROM ";
+                                            strSql += "ORI_DOCUMENTOSRECIBIDOS ";
+                                            strSql += "WHERE ";
+                                            strSql += "Uuid = '" + Elementos[0].ToString() + "'";
+
+                                            cmdObj.CommandText = strSql;
+                                            SqlDataReader rdrObj = cmdObj.ExecuteReader();
+                                            if (rdrObj.HasRows != true)
+                                            {
+                                                Faltantes faltantes = new Faltantes();
+                                                faltantes = new Faltantes();
+                                                faltantes.Tipo = "RECIBIDO";
+                                                faltantes.Uudi = Elementos[0].ToString();
+                                                faltantes.RFCEmisor = Elementos[1].ToString();
+                                                faltantes.NombreEmisor = Elementos[2].ToString();
+                                                faltantes.RFCReceptor = Elementos[3].ToString();
+                                                faltantes.NombreReceptor = Elementos[4].ToString();
+                                                faltantes.RFCPac = Elementos[5].ToString();
+                                                faltantes.FechaEmision = Convert.ToDateTime(Elementos[6].ToString());
+                                                faltantes.FechaCer = Convert.ToDateTime(Elementos[7].ToString());
+                                                faltantes.Monto = Convert.ToDouble(Elementos[8].ToString());
+                                                faltantes.Efecto = Elementos[9].ToString();
+                                                faltantes.Estatus = Elementos[10].ToString();
+                                                if (Elementos[11].ToString() != "")
+                                                {
+                                                    faltantes.FechaCancelacion = Convert.ToDateTime(Elementos[11].ToString());
+                                                }
+                                                listaFaltante.Add(faltantes);
+                                            }
+                                        }
+                                        cnObj.Close();
+                                    }
+                                }
+                                else
+                                {
+                                    if (cnObj.State == System.Data.ConnectionState.Open)
+                                    {
+                                        cnObj.Close();
+                                    }
+                                }
+
+                                lineaCompleta = true;
+                            }
+                            else
+                            {
+                                lineaCompleta = false;
+                                lineaIncompleta = linea;
+                            }
+                            cuenta += 1;
+                        }
+                        else
+                        {
+                            cuenta += 1;
+                        }
+                    }
+                    CancelaDocumentos(listaFaltante, 1);
+                }
+            }
+
+            return listaFaltante;
+        }
+
         private void CancelaDocumentos(List<Faltantes> Documentos, int tipo)
         {
             Conexion conectar = new Conexion();
@@ -760,6 +1017,14 @@ namespace Modelo.Crud
                                 Directory.CreateDirectory(pathTemp);
                             }
                             break;
+
+                        case 2:
+                            pathTemp += "\\Xml";
+                            if (!Directory.Exists(pathTemp))
+                            {
+                                Directory.CreateDirectory(pathTemp);
+                            }
+                            break;
                     }
                 }
                 else
@@ -776,6 +1041,14 @@ namespace Modelo.Crud
 
                         case 1:
                             pathTemp += "\\Recibidos";
+                            if (!Directory.Exists(pathTemp))
+                            {
+                                Directory.CreateDirectory(pathTemp);
+                            }
+                            break;
+
+                        case 2:
+                            pathTemp += "\\Xml";
                             if (!Directory.Exists(pathTemp))
                             {
                                 Directory.CreateDirectory(pathTemp);
@@ -807,6 +1080,14 @@ namespace Modelo.Crud
                                 Directory.CreateDirectory(pathTemp);
                             }
                             break;
+
+                        case 2:
+                            pathTemp += "\\Xml";
+                            if (!Directory.Exists(pathTemp))
+                            {
+                                Directory.CreateDirectory(pathTemp);
+                            }
+                            break;
                     }
                 }
                 else
@@ -823,6 +1104,14 @@ namespace Modelo.Crud
 
                         case 1:
                             pathTemp += "\\Recibidos";
+                            if (!Directory.Exists(pathTemp))
+                            {
+                                Directory.CreateDirectory(pathTemp);
+                            }
+                            break;
+
+                        case 2:
+                            pathTemp += "\\Xml";
                             if (!Directory.Exists(pathTemp))
                             {
                                 Directory.CreateDirectory(pathTemp);
@@ -850,9 +1139,9 @@ namespace Modelo.Crud
                     {
                         File.Delete(archivo);
                     }
-                    Directory.Delete(subdirectorio);
+                    Directory.Delete(subdirectorio,true);
                 }
-                Directory.Delete(directorio);
+                Directory.Delete(directorio,true);
             }
         }
 
